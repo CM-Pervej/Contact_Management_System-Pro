@@ -1,0 +1,29 @@
+contact-manager/
+│── autoload.php
+│── config/
+│   └── Database.php
+│── app/
+│   ├── Core/
+│   │   ├── Controller.php
+│   │   └── Model.php
+│   ├── Controllers/
+│   │   ├── AuthController.php
+│   │   └── ContactController.php
+│   ├── Models/
+│   │   ├── User.php
+│   │   └── Contact.php
+│   ├── Helpers/
+│   │   └── Functions.php
+│── public/
+│   ├── index.php
+│   ├── login.php
+│   ├── register.php
+│   ├── dashboard.php
+│   └── contacts/
+│       ├── create.php
+│       ├── edit.php
+│       ├── show.php
+│       └── trash.php
+│── uploads/
+│── vendor/
+│── .htaccess   (optional)
