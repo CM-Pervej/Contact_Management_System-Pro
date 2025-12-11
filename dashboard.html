@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Management System - Pro Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-base-200">
+  <div class="drawer lg:drawer-open">
+    <input id="sidebar-toggle" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content flex flex-col">
+
+      <!-- Navbar -->
+      <div class="navbar bg-base-100 shadow-md px-4">
+        <div class="flex-none lg:hidden">
+          <label for="sidebar-toggle" class="btn btn-square btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </label>
+        </div>
+        <div class="flex-1">
+          <a class="text-xl font-bold">CMS Pro Dashboard</a>
+        </div>
+        <div class="flex-none">
+          <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                <img alt="User" src="https://i.pravatar.cc/100" />
+              </div>
+            </label>
+            <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+              <li><a>Profile</a></li>
+              <li><a>Settings</a></li>
+              <li><a>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="p-6 space-y-6">
+        
+        <!-- Stats Cards -->
+        <div class="grid gap-6 md:grid-cols-3">
+          <div class="stat bg-base-100 shadow rounded-xl">
+            <div class="stat-title">Total Contacts</div>
+            <div class="stat-value">1,250</div>
+            <div class="stat-desc">+10% this month</div>
+          </div>
+
+          <div class="stat bg-base-100 shadow rounded-xl">
+            <div class="stat-title">New Contacts</div>
+            <div class="stat-value">58</div>
+            <div class="stat-desc">+5% this week</div>
+          </div>
+
+          <div class="stat bg-base-100 shadow rounded-xl">
+            <div class="stat-title">Trash</div>
+            <div class="stat-value">34</div>
+            <div class="stat-desc">Recently deleted</div>
+          </div>
+        </div>
+
+        <!-- Contacts Table -->
+        <div class="bg-base-100 rounded-xl shadow p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">Recent Contacts</h2>
+            <button class="btn btn-primary">+ Add New Contact</button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>John Doe</td>
+                  <td>john@example.com</td>
+                  <td>+880123456789</td>
+                  <td>
+                    <button class="btn btn-xs btn-info">Edit</button>
+                    <button class="btn btn-xs btn-error">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Sarah Smith</td>
+                  <td>sarah@example.com</td>
+                  <td>+880987654321</td>
+                  <td>
+                    <button class="btn btn-xs btn-info">Edit</button>
+                    <button class="btn btn-xs btn-error">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="drawer-side">
+      <label for="sidebar-toggle" class="drawer-overlay"></label>
+      <aside class="w-64 bg-base-100 shadow-lg min-h-full p-4">
+        <h2 class="text-lg font-bold mb-4">Menu</h2>
+        <ul class="menu space-y-2">
+          <li><a class="active">Dashboard</a></li>
+          <li><a>Contacts</a></li>
+          <li><a>Add Contact</a></li>
+          <li><a>Trash</a></li>
+          <li><a>User Management</a></li>
+          <li><a>Settings</a></li>
+        </ul>
+      </aside>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,12 +1,11 @@
-<?php
-    require_once __DIR__ . '/vendor/autoload.php';
-    use App\Models\User;
-
-    try {
-        $user = new User();
-        $newUserId = $user->register("John Doe", "john@example.com", "123456");
-        echo "New user created with ID: $newUserId";
-    } catch (\Exception $e) {
-        echo "Error: " . $e->getMessage();
-    }
-?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="public/register.php">go</a>
+</body>
+</html>

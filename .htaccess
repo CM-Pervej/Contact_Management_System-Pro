@@ -1,0 +1,17 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect requests with .php to clean URL (avoid duplicates)
+RewriteCond %{THE_REQUEST} \s([^.]+)\.php [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# If the request is not a directory and a corresponding .php file exists, rewrite to that file
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# Optional: Prevent access to .htaccess itself
+<Files .htaccess>
+  Order allow,deny
+  Deny from all
+</Files>
