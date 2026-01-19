@@ -3,9 +3,9 @@
     use App\Config\Database;
 
     class Model {
-        protected $conn;    // Connection should be protected so that only the child models can use it only.
+        protected $conn;    // Connection should be protected so that only the child models can use it.
 
-        public function __construct() {
+        public function __construct() { // this construct function and the Database construct functions are not same.
             $database = new Database;   // Create a Database object
             $this->conn = $database->getConnection();   // Save the mysqli connection in this model
         }
@@ -23,7 +23,7 @@
                 throw new \Exception("Query Failed: " . $this->conn->error);
             }
 
-            return $result;
+            return $result; // this will return values to render, that's why $result
         }
 
         // Run INSERT, UPDATE, DELETE queries
@@ -32,11 +32,11 @@
                 throw new \Exception("Query Failed: " . $this->conn->error);
             }
 
-            return true;
+            return true;  // this needs to not return anything, that's why boolean (yes)
         }
 
         protected function lastInsertedId() {
-            return $this->conn->insert_id;
+            return $this->conn->insert_id;  //  insert_id is a built-in property of mysqli
         }
     }
 ?>

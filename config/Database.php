@@ -30,6 +30,9 @@
             $this->conn->set_charset("utf8mb4");
         }
 
+        // as the construct function has private data, 
+        // so we can't access it directly. 
+        // that's why we need a connection bridge and getCOnnection does it
         public function getConnection() {
             return $this->conn;
         }

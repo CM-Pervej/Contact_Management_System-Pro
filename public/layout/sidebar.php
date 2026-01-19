@@ -3,9 +3,9 @@
   <div class="p-4">
     <h2 class="text-lg font-bold mb-4">Menu</h2>
     <ul class="menu space-y-2">
-      <li><a class="active">Dashboard</a></li>
+      <li><a href="/contact/public/dashboard.php">Dashboard</a></li>
       <li><a>Contacts</a></li>
-      <li><a>Add Contact</a></li>
+      <li><a href="/contact/public/contacts/create.php">Add Contact</a></li>
       <li><a>Trash</a></li>
       <li><a>User Management</a></li>
       <li><a>Settings</a></li>

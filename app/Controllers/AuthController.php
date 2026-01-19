@@ -2,7 +2,7 @@
     namespace App\Controllers;
     use App\Models\User;
 
-    class AuthCOntroller {
+    class AuthController {
         public $errors = [];
         public $success = '';
 
@@ -12,11 +12,14 @@
                 $name = trim($_POST['name']);
                 $email = trim($_POST['email']);
                 $password = trim($_POST['password']);
+                $confirm = trim($_POST['confirm_password']);
 
                 if(empty($name) || empty($email) || empty($password)){
                     $this->errors[] = "All fields are required!";
                 } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
                     $this->errors[] = "Invalid email format";
+                } else if($password !== $confirm) {
+                    $this->errors[] = "Password and Confirm password does not matched";
                 } else {
                     $user = new User;
     

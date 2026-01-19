@@ -28,7 +28,7 @@
 <div class="bg-base-100 rounded-xl shadow p-6">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-xl font-semibold">Recent Contacts</h2>
-    <button class="btn btn-primary">+ Add New Contact</button>
+    <button class="btn btn-primary"><a href="/contact/public/contacts/create.php">+ Add New Contact</a></button>
   </div>
 
   <div class="overflow-x-auto">
@@ -65,6 +65,4 @@
   </div>
 </div>
 
-<?php
-require_once 'layout/footer.php';
-?>
+<?php require_once 'layout/footer.php'; ?>
