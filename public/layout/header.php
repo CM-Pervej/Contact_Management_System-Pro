@@ -5,7 +5,7 @@
     }
 
     if (!isset($_SESSION['user'])) {
-        header("Location: login.php");
+        header("Location: /contact/public/login.php");
         exit;
     }
 

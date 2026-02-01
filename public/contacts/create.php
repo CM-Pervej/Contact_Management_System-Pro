@@ -1,82 +1,18 @@
 <?php
     require_once "../../vendor/autoload.php";
+    $pageTitle = "ContactMS-Pro/Create Contact";
     require_once __DIR__ . '/../layout/layout.php';
 
     use App\Controllers\ContactController;
 
     $controller = new ContactController();
-    $errors = [];
-    $success = "";
+    $controller->create(); // 👈 handles POST internally
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-        $uploadDir = realpath(__DIR__ . '/../../') . '/uploads/';
-
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $images = [];
-
-        /* FRONT IMAGE */
-        if (!empty($_FILES['front_image']['name'])) {
-            $filename = time() . '_front_' . basename($_FILES['front_image']['name']);
-            $targetPath = $uploadDir . $filename;
-
-            if (!move_uploaded_file($_FILES['front_image']['tmp_name'], $targetPath)) {
-                $errors[] = "Front image upload failed";
-            } else {
-                $images[] = [
-                    "type" => "front",
-                    "file_path" => "uploads/" . $filename // DB / public path
-                ];
-            }
-        }
-
-        /* BACK IMAGE */
-        if (!empty($_FILES['back_image']['name'])) {
-            $filename = time() . '_back_' . basename($_FILES['back_image']['name']);
-            $targetPath = $uploadDir . $filename;
-
-            if (!move_uploaded_file($_FILES['back_image']['tmp_name'], $targetPath)) {
-                $errors[] = "Back image upload failed";
-            } else {
-                $images[] = [
-                    "type" => "back",
-                    "file_path" => "uploads/" . $filename
-                ];
-            }
-        }
-
-        $data = [
-            "user_id"        => $_SESSION['user']['id'],
-            "first_name"     => $_POST['first_name'] ?? "",
-            "middle_name"    => $_POST['middle_name'] ?? "",
-            "last_name"      => $_POST['last_name'] ?? "",
-            "nickname"       => $_POST['nickname'] ?? "",
-            "phonetic_first" => $_POST['phonetic_first'] ?? "",
-            "phonetic_last"  => $_POST['phonetic_last'] ?? "",
-            "name_prefix"    => $_POST['name_prefix'] ?? "",
-            "name_suffix"    => $_POST['name_suffix'] ?? "",
-            "company"        => $_POST['company'] ?? "",
-            "department"     => $_POST['department'] ?? "",
-            "title"          => $_POST['title'] ?? "",
-            "notes"          => $_POST['notes'] ?? "",
-            "relation"       => $_POST['relation'] ?? "",
-            "phones"         => $_POST['phones'] ?? [],
-            "emails"         => $_POST['emails'] ?? [],
-            "dates"          => $_POST['dates'] ?? [],
-            "addresses"      => $_POST['addresses'] ?? [],
-            "websites"       => $_POST['websites'] ?? [],
-            "images"         => $images
-        ];
-
-        $result = $controller->store($data);
-        $result ? $success = $controller->success : $errors = $controller->errors;
-    }
+    $errors  = $controller->errors;
+    $success = $controller->success;
 ?>
 
-<div class="max-w-5xl mx-auto bg-white p-8 rounded-xl shadow-xl mt-6">
+<div class="mx-auto p-8">
     <!-- STEPPER -->
     <div class="flex items-center justify-between mb-10">
         <?php for ($i=1;$i<=4;$i++): ?>
@@ -178,7 +114,11 @@
             <label>Back Image</label>
             <input type="file" accept="image/*" name="back_image" class="file-input file-input-bordered w-full mb-4" onchange="previewImage(event,'previewBack')">
 
-            <textarea name="notes" class="textarea textarea-bordered w-full mb-3" placeholder="Notes"></textarea>
+            <h3 class="font-semibold">Notes</h3>
+            <div id="notes_block"></div>
+            <button type="button" class="btn btn-sm mt-2" onclick="addNote()">+ Add Note</button>
+            
+            <!-- <textarea name="notes" class="textarea textarea-bordered w-full mb-3" placeholder="Notes"></textarea> -->
             <input name="relation" class="input input-bordered w-full" placeholder="Relation">
 
             <div class="flex justify-between mt-6">
@@ -236,7 +176,7 @@
     }
 
     /* dynamic fields */
-    let p=0,e=0,d=0,a=0,w=0;
+    let p=0,e=0,d=0,a=0,w=0,n=0;
     const addPhone=()=>phones_block.insertAdjacentHTML('beforeend',
         `<div class="grid grid-cols-2 gap-4 mb-2">
             <input name="phones[${p}][label]" class="input input-bordered" placeholder="Label">
@@ -271,6 +211,11 @@
             <input name="websites[${w++}][url]" class="input input-bordered" placeholder="URL">
         </div>`);
 
+    const addNote = () => notes_block.insertAdjacentHTML('beforeend',
+        `<div class="mb-2">
+            <input name="notes[${n++}]" class="input input-bordered" placeholder="Note">
+        </div>`);
+
     /* IMAGE PREVIEW */
     function previewImage(event, id) {
         const img = document.getElementById(id);
@@ -284,7 +229,6 @@
     addDate(); 
     addAddress(); 
     addWebsite();
+    addNote();
     goStep(1);
 </script>
-
-<?php require_once __DIR__ . '/../layout/footer.php'; ?>

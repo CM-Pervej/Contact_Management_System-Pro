@@ -7,15 +7,11 @@
 
         // Register users 
         public function register($name, $email, $password) {
-            // clean input for avoiding SQL injection
             $name = $this->clean($name);
             $email = $this->clean($email);
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
-            // query variable as Insert into database query
             $query = "INSERT INTO {$this->table} (name, email, password) VALUES ('$name', '$email', '$passwordHash')";
-
-            // executeQuery() with query variable
             $this->executeQuery($query);
 
             // Return last inserted id 
@@ -51,20 +47,19 @@
 
         // Get user id (for edit form)
         public function getById($id) {
-            $id = (int) $id;
-            $query = "SELECT * FROM {$this->table} WHERE id = $id LIMIT 1";
+            $id     = (int) $id;
+            $query  = "SELECT * FROM {$this->table} WHERE id = $id LIMIT 1";
             $result = $this->selectQuery($query);
             return $result->fetch_assoc();
         }
 
         // update user details 
         public function update($id, $name, $email) {
-            $id = (int) $id;
-            $name = $this->clean($name);
-            $email= $this->clean($email);
+            $id    = (int) $id;
+            $name  = $this->clean($name);
+            $email = $this->clean($email);
 
             $query = "UPDATE {$this->table} SET name = '$name', email = '$email' WHERE id = '$id'";
-
             return $this->executeQuery($query);
         }
     }

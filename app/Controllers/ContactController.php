@@ -7,92 +7,134 @@
     use App\Models\ContactDate;
     use App\Models\ContactAddress;
     use App\Models\ContactWebsite;
+    use App\Models\ContactNote;
     use App\Models\ContactImage;
 
-    class ContactController
-    {
+    class ContactController {
         public $errors = [];
         public $success = "";
 
-        /**
-         * CREATE NEW CONTACT
-         */
-        public function store($data)
-        {
+        // create main contact 
+        public function create() {
+            if($_SERVER['REQUEST_METHOD'] !== 'POST') return false;
+
+            $userId = $_SESSION['user']['id'] ?? null;
+            if(!$userId) {
+                $this->errors[] = "Unauthorized access";
+                return false;
+            }
+
+            if(empty($_POST['first_name'])) {
+                $this->errors[] = "First name is required";
+            }
+
+            $uploadDir = realpath(__DIR__ . '/../../') . '/uploads/';
+            if(!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+            $images = [];
+            foreach (['front_image', 'back_image'] as $imgField) {
+                if(!empty($_FILES[$imgField]['name'])) {
+                    $filename = time() . '_' . $imgField . '_' .basename($_FILES[$imgField]['name']);
+                    $targetPath = $uploadDir . $filename;
+                    if (move_uploaded_file($_FILES[$imgField]['tmp_name'], $targetPath)) {
+                        $images[] = [
+                            "type" => str_replace('_image', '', $imgField),
+                            "file_path" => "uploads/" . $filename
+                        ];
+                    } else {
+                        $this->errors[] = ucfirst($imgField) . " Upload failed";
+                    }
+                }
+            }
+
+            $data = [
+                "user_id"        => $userId,
+                "first_name"     => trim($_POST['first_name']),
+                "middle_name"    => trim($_POST['middle_name'] ?? ""),
+                "last_name"      => trim($_POST['last_name'] ?? ""),
+                "nickname"       => trim($_POST['nickname'] ?? ""),
+                "phonetic_first" => trim($_POST['phonetic_first'] ?? ""),
+                "phonetic_last"  => trim($_POST['phonetic_last'] ?? ""),
+                "name_prefix"    => trim($_POST['name_prefix'] ?? ""),
+                "name_suffix"    => trim($_POST['name_suffix'] ?? ""),
+                "company"        => trim($_POST['company'] ?? ""),
+                "department"     => trim($_POST['department'] ?? ""),
+                "title"          => trim($_POST['title'] ?? ""),
+                "relation"       => trim($_POST['relation'] ?? ""),
+                "phones"         => $_POST['phones'] ?? [],
+                "emails"         => $_POST['emails'] ?? [],
+                "dates"          => $_POST['dates'] ?? [],
+                "addresses"      => $_POST['addresses'] ?? [],
+                "websites"       => $_POST['websites'] ?? [],
+                "notes"          => $_POST['notes'] ?? [],
+                "images"         => $images
+                ];
+
             $contactModel = new Contact();
-
-            // 1. Insert main contact
-            $contact_id = $contactModel->create($data);
-
-            if (!$contact_id) {
+            $contactId = $contactModel->create($data);
+            if (!$contactId) {
                 $this->errors[] = "Failed to create contact";
                 return false;
             }
 
-            // Load sub-models
-            $phoneModel   = new ContactPhone();
-            $emailModel   = new ContactEmail();
-            $dateModel    = new ContactDate();
-            $addressModel = new ContactAddress();
-            $websiteModel = new ContactWebsite();
-            $imageModel   = new ContactImage();
-
-            /** INSERT PHONES */
-            if (!empty($data['phones'])) {
-                foreach ($data['phones'] as $item) {
-                    if (!empty($item['phone'])) {
-                        $phoneModel->create($contact_id, $item['label'], $item['phone']);
-                    }
-                }
-            }
-
-            /** INSERT EMAILS */
-            if (!empty($data['emails'])) {
-                foreach ($data['emails'] as $item) {
-                    if (!empty($item['email'])) {
-                        $emailModel->create($contact_id, $item['label'], $item['email']);
-                    }
-                }
-            }
-
-            /** INSERT DATES */
-            if (!empty($data['dates'])) {
-                foreach ($data['dates'] as $item) {
-                    if (!empty($item['date'])) {
-                        $dateModel->create($contact_id, $item['label'], $item['date']);
-                    }
-                }
-            }
-
-            /** INSERT ADDRESSES */
-            if (!empty($data['addresses'])) {
-                foreach ($data['addresses'] as $item) {
-                    if (!empty($item['street'])) {
-                        $addressModel->create($contact_id, $item['label'], $item);
-                    }
-                }
-            }
-
-            /** INSERT WEBSITES */
-            if (!empty($data['websites'])) {
-                foreach ($data['websites'] as $item) {
-                    if (!empty($item['url'])) {
-                        $websiteModel->create($contact_id, $item['label'], $item['url']);
-                    }
-                }
-            }
-
-            /** INSERT IMAGES */
-            if (!empty($data['images'])) {
-                foreach ($data['images'] as $item) {
-                    if (!empty($item['file_path'])) {
-                        $imageModel->create($contact_id, $item['type'], $item['file_path']);
-                    }
-                }
-            }
+            // find it to the last 
+            $this->saveModularData($contactId, $data);
 
             $this->success = "Contact created successfully!";
-            return $contact_id;
+            return $contactId;
+        }
+
+        // Helper: Manage Modular Data (Create / Update / Delete)
+        private function saveModularData($contactId, $data) {
+            $phoneModel     = new ContactPhone();
+            $emailModel     = new ContactEmail();
+            $dateModel      = new ContactDate();
+            $addressModel   = new ContactAddress();
+            $websiteModel   = new ContactWebsite();
+            $NoteModel      = new ContactNote();
+
+            // Phones
+            foreach($data['phones'] ?? [] as $key => $item) {
+                if(!empty($item['phone'])) {
+                    $phoneModel->create($contactId, $item['label'], $item['phone']);
+                }
+            }
+
+            // Emails
+            foreach($data['emails'] ?? [] as $key => $item) {
+                if(!empty($item['email'])) {
+                    $emailModel->create($contactId, $item['label'], $item['email']);
+                }
+            }
+
+            // Dates
+            foreach($data['dates'] ?? [] as $key => $item) {
+                if(!empty($item['date'])) {
+                    $dateModel->create($contactId, $item['label'], $item['date']);
+                }
+            }
+
+            // Addresses
+            foreach($data['addresses'] ?? [] as $key => $item) {
+                if(!empty($item['street'])) {
+                    $addressModel->create($contactId, $item['label'], $item);
+                }
+            }
+
+            // Addresses
+            foreach($data['websites'] ?? [] as $key => $item) {
+                if(!empty($item['url'])) {
+                    $websiteModel->create($contactId, $item['label'], $item['url']);
+                }
+            }
+
+            // Notes
+            foreach ($data['notes'] ?? [] as $note) {
+                $note = trim($note);
+                if ($note !== '') {
+                    $NoteModel->create($contactId, $note);
+                }
+            }
         }
     }
 ?>
