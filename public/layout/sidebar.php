@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<div id="sidebar" class="fixed inset-y-0 left-0 bg-base-100 w-64 shadow-lg transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-30">
+<div id="sidebar" class="fixed inset-y-0 left-0 w-64 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-30 bg-gray-100">
   <div class="p-4">
     <h2 class="text-lg font-bold mb-4">Menu</h2>
     <ul class="menu space-y-2">

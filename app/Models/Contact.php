@@ -7,43 +7,80 @@
 
         // create contact
         public function create ($data) {
-            $first = $this->clean($data['first_name']);
-            $middle = $this->clean($data['middle_name']);
-            $last = $this->clean($data['last_name']);
-            $nickname = $this->clean($data['nickname']);
-            $phonetic_first = $this->clean($data['phonetic_first']);
-            $phonetic_last = $this->clean($data['phonetic_last']);
-            $suffix = $this->clean($data['name_suffix']);
-            $prefix = $this->clean($data['name_prefix']);
+            $first          = $this->clean($data['first_name'] ?? '');
+            $middle         = $this->clean($data['middle_name'] ?? '');
+            $last           = $this->clean($data['last_name'] ?? '');
+            $nickname       = $this->clean($data['nickname'] ?? '');
+            $phonetic_first = $this->clean($data['phonetic_first'] ?? '');
+            $phonetic_last  = $this->clean($data['phonetic_last'] ?? '');
+            $suffix         = $this->clean($data['name_suffix'] ?? '');
+            $prefix         = $this->clean($data['name_prefix'] ?? '');
 
-            $company = $this->clean($data['company']);
-            $department = $this->clean($data['department']);
-            $title = $this->clean($data['title']);
-            $relation = $this->clean($data['relation']);
+            $company        = $this->clean($data['company'] ?? '');
+            $department     = $this->clean($data['department'] ?? '');
+            $title          = $this->clean($data['title'] ?? '');
+            $relation       = $this->clean($data['relation'] ?? '');
 
-            $user_id = (int)$data['user_id'];
+            $user_id        = (int)$data['user_id'];
 
-            $query = "INSERT INTO {$this->table} 
-                (user_id, first_name, middle_name, last_name, nickname, phonetic_first, phonetic_last,name_suffix, name_prefix, company, department, title, relation)
-                VALUES 
-                ('$user_id', '$first', '$middle', '$last', '$nickname', '$phonetic_first', '$phonetic_last', '$suffix', '$prefix', '$company', '$department', '$title', '$relation')";
-
+            $query = "INSERT INTO {$this->table} (user_id, first_name, middle_name, last_name, nickname, phonetic_first, phonetic_last,name_suffix, name_prefix, company, department, title, relation) VALUES ('$user_id', '$first', '$middle', '$last', '$nickname', '$phonetic_first', '$phonetic_last', '$suffix', '$prefix', '$company', '$department', '$title', '$relation')";
             $this->executeQuery($query);
+            
             return $this->lastInsertedId();
         }
 
         // Get contact by Id 
         public function getById($id) {
-            $id = (int) $id;
-            $query = "SELECT * FROM {$this->table} WHERE id = $id AND is_deleted = 0 LIMIT 1";
+            $id     = (int) $id;
+            $query  = "SELECT * FROM {$this->table} WHERE id = $id AND is_deleted = 0 LIMIT 1";
             return $this->selectQuery($query)->fetch_assoc();
         }
 
         // Get All contact
-        public function getAll($user_id) {
+        public function getByUserId($user_id) {
             $user_id = (int) $user_id;
-            $query = "SELECT * FROM {$this->table} WHERE user_id = $user_id AND is_deleted = 0 ORDER BY first_name";
-            return $this->selectQuery($query);
+            $query   = "SELECT * FROM {$this->table} WHERE user_id = $user_id AND is_deleted = 0 ORDER BY first_name";
+            $result  = $this->selectQuery($query);
+
+            $contacts = [];
+            while ($row = $result->fetch_assoc()) {
+                $contacts[] = $row;
+            }
+            return $contacts;
+        }
+
+        // update main contact 
+        public function update($id, $data) {
+            $id             = (int)$id;
+            $first          = $this->clean($data['first_name'] ?? '');
+            $middle         = $this->clean($data['middle_name'] ?? '');
+            $last           = $this->clean($data['last_name'] ?? '');
+            $nickname       = $this->clean($data['nickname'] ?? '');
+            $phonetic_first = $this->clean($data['phonetic_first'] ?? '');
+            $phonetic_last  = $this->clean($data['phonetic_last'] ?? '');
+            $suffix         = $this->clean($data['name_suffix'] ?? '');
+            $prefix         = $this->clean($data['name_prefix'] ?? '');
+            $company        = $this->clean($data['company'] ?? '');
+            $department     = $this->clean($data['department'] ?? '');
+            $title          = $this->clean($data['title'] ?? '');
+            $relation       = $this->clean($data['relation'] ?? '');
+
+            $query = "UPDATE {$this->table} SET
+                first_name      = '$first',
+                middle_name     = '$middle',
+                last_name       = '$last',
+                nickname        = '$nickname',
+                phonetic_first  = '$phonetic_first',
+                phonetic_last   = '$phonetic_last',
+                name_suffix     = '$suffix',
+                name_prefix     = '$prefix',
+                company         = '$company',
+                department      = '$department',
+                title           = '$title',
+                relation        = '$relation'
+                WHERE id = '$id'";
+
+            return $this->executeQuery($query);
         }
     }
 ?>

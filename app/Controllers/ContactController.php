@@ -14,7 +14,7 @@
         public $errors = [];
         public $success = "";
 
-        // create main contact 
+        /** create main contact */
         public function create() {
             if($_SERVER['REQUEST_METHOD'] !== 'POST') return false;
 
@@ -84,7 +84,53 @@
             return $contactId;
         }
 
-        // Helper: Manage Modular Data (Create / Update / Delete)
+        /** show all contact */
+        public function index(){
+            $userId = $_SESSION['user']['id'] ?? null;
+            if(!$userId) {
+                $this->errors[] = "You must be loggedin to viw contacts";
+                return [];
+            }
+
+            $contactModel = new Contact();
+            $contacts = $contactModel->getByUserId($userId) ?: [];
+
+            foreach($contacts as $c) {
+                $this->loadModularData($c);
+            }
+
+            return $contacts;
+        }
+
+        /** Show Single Contact */
+        public function show($id) {
+            if(!$id) {
+                $this->errors[] = "Contact ID is required";
+                return null;
+            }
+
+            $contactModel = new Contact();
+            $contact = $contactModel->getById($id);
+            if(!$contact) {
+                $this->errors[] = "Contact not found";
+                return null;
+            }
+
+            $this->loadModularData($contact);
+            return $contact;
+        }
+
+        /** Helper: Load Modular Data */
+        private function loadModularData($contact) {
+            $contact['phones']      = (new ContactPhone())->getByContactId($contact['id']);
+            $contact['emails']      = (new ContactEmail())->getByContactId($contact['id']);
+            $contact['dates']       = (new ContactDate())->getByContactId($contact['id']);
+            $contact['addresses']   = (new ContactAddress())->getByContactId($contact['id']);
+            $contact['websites']    = (new ContactWebsite())->getByContactId($contact['id']);
+            $contact['images']      = (new ContactImage())->getByContactId($contact['id']);
+        }
+
+        /** Helper: Manage Modular Data (Create / Update / Delete) */
         private function saveModularData($contactId, $data) {
             $phoneModel     = new ContactPhone();
             $emailModel     = new ContactEmail();

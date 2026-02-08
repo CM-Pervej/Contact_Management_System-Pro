@@ -2,7 +2,7 @@
 <div class="flex flex-1">
   <div class="flex-1 flex flex-col lg:ml-64">
     <!-- Topbar -->
-    <div class="navbar bg-base-100 shadow-md px-4">
+    <div class="navbar px-4">
       <!-- Mobile menu button -->
       <button id="sidebar-toggle" class="btn btn-square btn-ghost lg:hidden">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -11,7 +11,7 @@
       </button>
 
       <div class="flex-1">
-        <a class="text-xl font-bold">Contact Management System -Pro</a>
+        <a class="text-xl font-bold">Smart Contact Management System</a>
       </div>
 
       <div class="flex-none">
@@ -40,4 +40,4 @@
     </div>
 
     <!-- Main content container -->
-    <div class="p-6 space-y-6 flex-1 overflow-auto">
+    <div class="space-y-6 flex-1 overflow-auto bg-white rounded-tl-3xl">
