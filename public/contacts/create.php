@@ -213,7 +213,7 @@
 
     const addNote = () => notes_block.insertAdjacentHTML('beforeend',
         `<div class="mb-2">
-            <input name="notes[${n++}]" class="input input-bordered" placeholder="Note">
+            <input name="notes[${n++}][note]" class="input input-bordered" placeholder="Note">
         </div>`);
 
     /* IMAGE PREVIEW */

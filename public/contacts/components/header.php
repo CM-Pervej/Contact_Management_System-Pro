@@ -51,7 +51,7 @@
             <!-- DESKTOP ACTION BUTTONS -->
             <div class="hidden lg:flex items-center gap-2">
                 <!-- ADD -->
-                <a href="/cms/public/relationships/relatives.php?id=<?= $contact['id'] ?? '' ?>" class="btn btn-sm btn-outline btn-success shadow-md hover:shadow-lg transition gap-1"> ➕ Add </a>
+                <a href="/contact/public/relationships/relatives.php?id=<?= $contact['id'] ?? '' ?>" class="btn btn-sm btn-outline btn-success shadow-md hover:shadow-lg transition gap-1"> ➕ Add </a>
                 <!-- EDIT -->
                 <a href="edit.php?id=<?= $contact['id'] ?? '' ?>" class="btn btn-sm btn-outline btn-primary shadow-md hover:shadow-lg transition gap-1"> ✏️ Edit </a>
             </div>
@@ -59,7 +59,7 @@
             <!-- MOBILE FLOATING ACTION BUTTONS -->
             <div class="lg:hidden fixed bottom-6 right-6 z-40 flex flex-col gap-3">
                 <!-- ADD -->
-                <a href="/cms/public/relationships/relatives.php?id=<?= $contact['id'] ?? '' ?>" class="btn btn-success btn-circle shadow-xl flex items-center justify-center hover:scale-105 transition tooltip tooltip-left" data-tip="Add Contact">
+                <a href="/contact/public/relationships/relatives.php?id=<?= $contact['id'] ?? '' ?>" class="btn btn-success btn-circle shadow-xl flex items-center justify-center hover:scale-105 transition tooltip tooltip-left" data-tip="Add Contact">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>

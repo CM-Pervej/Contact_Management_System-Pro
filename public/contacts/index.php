@@ -1,32 +1,32 @@
 <?php
-require_once "../../vendor/autoload.php";
-$pageTitle = "ContactMS-Pro/Contact List";
-require_once __DIR__ . '/../layout/layout.php';
+    require_once "../../vendor/autoload.php";
+    $pageTitle = "ContactMS-Pro/Contact List";
+    require_once __DIR__ . '/../layout/layout.php';
 
-use App\Controllers\ContactController;
+    use App\Controllers\ContactController;
 
-$controller = new ContactController();
-$contacts = $controller->index();
-$errors = $controller->errors;
+    $controller = new ContactController();
+    $contacts = $controller->index();
+    $errors = $controller->errors;
 
-// Function to get full name string for sorting
-function getFullName($contact) {
-    $parts = [];
-    if (!empty($contact['name_prefix'])) $parts[] = $contact['name_prefix'];
-    if (!empty($contact['first_name'])) $parts[] = $contact['first_name'];
-    if (!empty($contact['middle_name'])) $parts[] = $contact['middle_name'];
-    if (!empty($contact['last_name'])) $parts[] = $contact['last_name'];
-    if (!empty($contact['name_suffix'])) $parts[] = ", {$contact['name_suffix']}";
-    if (!empty($contact['nickname'])) $parts[] = "({$contact['nickname']})";
-    return implode(' ', $parts);
-}
+    // Function to get full name string for sorting
+    function getFullName($contact) {
+        $parts = [];
+        if (!empty($contact['name_prefix'])) $parts[] = $contact['name_prefix'];
+        if (!empty($contact['first_name'])) $parts[] = $contact['first_name'];
+        if (!empty($contact['middle_name'])) $parts[] = $contact['middle_name'];
+        if (!empty($contact['last_name'])) $parts[] = $contact['last_name'];
+        if (!empty($contact['name_suffix'])) $parts[] = ", {$contact['name_suffix']}";
+        if (!empty($contact['nickname'])) $parts[] = "({$contact['nickname']})";
+        return implode(' ', $parts);
+    }
 
-// Sort contacts by full name alphabetically
-usort($contacts, function($a, $b) {
-    return strcasecmp(getFullName($a), getFullName($b));
-});
+    // Sort contacts by full name alphabetically
+    usort($contacts, function($a, $b) {
+        return strcasecmp(getFullName($a), getFullName($b));
+    });
 
-$totalContacts = count($contacts);
+    $totalContacts = count($contacts);
 ?>
 
 <div class="mx-auto p-8">

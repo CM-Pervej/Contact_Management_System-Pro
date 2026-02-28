@@ -1,7 +1,10 @@
 <?php
     require_once "../../vendor/autoload.php";
+    // $pageTitle = "ContactMS-Pro/Contact Details";
+    // require_once __DIR__ . '/../layout/layout.php';
 
     use App\Controllers\ContactController;
+    use App\Models\Relationship;
 
     $contactId = $_GET['id'] ?? null; // get id from URL
     $controller = new ContactController();
@@ -20,6 +23,14 @@
         return implode(' ', $parts);
     }
 
+    // Fetch relationships mapping
+    $relationshipModel = new Relationship();
+    $relationships = [];
+    foreach ($relationshipModel->getAll() as $rel) {
+        $relationships[$rel['id']] = $rel['rel_name'];
+    }
+
+
     $pageTitle = htmlspecialchars(getFullName($contact));
     require_once __DIR__ . '/../layout/layout.php';
 ?>
@@ -34,7 +45,7 @@
     <?php elseif ($contact): ?>
 
     <!-- HEADER -->
-    <?php include __DIR__ . '/Components/header.php'; ?>
+    <?php include __DIR__ . '/components/header.php'; ?>
 
     <section class="flex flex-col lg:flex-row">
         <!-- CONTACT INFO -->
@@ -48,6 +59,33 @@
             <?php include __DIR__ . '/Components/dates.php'; ?>
             <h2 class="text-sm font-medium text-gray-500 mb-4">Websites</h2>
             <?php include __DIR__ . '/Components/websites.php'; ?>
+            <h2 class="text-sm font-medium text-gray-500 mb-4">Others</h2>
+            <?php include __DIR__ . '/Components/notes.php'; ?>
+        </div>
+        <div class="space-y-3 px-8 mb-5 flex-1">
+            <h2 class="text-sm font-medium text-gray-500">Relatives</h2>
+            <?php if (!empty($contact['relatives'])): ?>
+                <div class="grid grid-cols-1 gap-4">
+                    <?php foreach ($contact['relatives'] as $rel):
+                        $relative = $controller->show($rel['relative_id']);
+                        $imgPath = $relative['images'][0]['file_path'] ?? 'uploads/logo.png';
+                        $fullName = getFullName($relative);
+                        $relationName = $relationships[$rel['relationship_id']] ?? 'Relation';
+                    ?>
+                        <div class="bg-white p-4 rounded shadow flex items-center space-x-3">
+                            <img src="../../<?= htmlspecialchars($imgPath) ?>" class="w-16 h-16 rounded-full object-cover border border-black">
+                            <div>
+                                <a href="person.php?id=<?= $rel['relative_id'] ?>" class="font-semibold text-blue-600 hover:underline">
+                                    <?= htmlspecialchars($fullName) ?>
+                                </a>
+                                <div class="text-sm text-gray-500"><?= htmlspecialchars($relationName) ?></div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p>No relatives Selected.</p>
+            <?php endif; ?>
         </div>
     </section>
     <?php endif; ?>

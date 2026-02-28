@@ -16,7 +16,7 @@
         }
 
         // get notes by contact id 
-        public function getByContact($contact_id) {
+        public function getByContactId($contact_id) {
             $contact_id = (int)$contact_id;
             $query      = "SELECT * FROM {$this->table} WHERE contact_id = $contact_id";
             $result     = $this->selectQuery($query);

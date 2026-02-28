@@ -2,20 +2,21 @@
     namespace App\Models;
     use App\Core\Model;
 
-    class ContactImage extends Model{
+    class ContactImage extends Model {
         protected $table = "contact_images";
 
         public function create($contact_id, $type, $file_path) {
-            $type       = $this->clean($type);
-            $file_path  = $this->clean($file_path);
+            $type = $this->clean($type);
+            $file_path = $this->clean($file_path);
             $contact_id = (int)$contact_id;
 
-            $query = "INSERT INTO {$this->table} (contact_id, type, file_path) VALUES ('$contact_id', '$type', '$file_path')";
+            $query = "INSERT INTO {$this->table} (contact_id, type, file_path)
+                    VALUES ('$contact_id', '$type', '$file_path')";
+
             $this->executeQuery($query);
-            
             return $this->lastInsertedId();
         }
-
+        
         public function getByContactId($contact_id) {
             $contact_id = (int)$contact_id;
             $query = "SELECT * FROM {$this->table} WHERE contact_id = '$contact_id'";
@@ -29,14 +30,16 @@
         }
 
         public function delete($id, $contact_id){
-            $id         = (int)$id;
+            $id = (int)$id;
             $contact_id = (int)$contact_id;
-            $query      = "DELETE FROM {$this->table} WHERE id='$id' AND contact_id='$contact_id'";
+
+            $query = "DELETE FROM {$this->table} 
+                    WHERE id='$id' AND contact_id='$contact_id'";
             return $this->executeQuery($query);
         }
 
         public function update($id, $contact_id, $type, $file_path){
-            $id         = (int)$id;
+            $id = (int)$id;
             $contact_id = (int)$contact_id;
 
             $fields = [];
